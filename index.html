@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>PrizmaCRAFT – egyedi ajándékok 3D nyomtatással, lézervágással és gravírozással</title>
+<meta name="description" content="A PrizmaCRAFT egyedi ajándék- és használati tárgyakat tervez és készít 3D nyomtatással, lézervágással és gravírozással. A te ötleted. A mi alkotásunk.">
+<link rel="icon" type="image/jpg" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09080f;
+  --bg-2:#0f0d18;
+  --surface:#15131f;
+  --surface-2:#1d1a2b;
+  --line:#2d2a43;
+  --text:#eceaf7;
+  --muted:#aca8c4;
+  --violet:#8b5cf6;
+  --violet-soft:#a78bfa;
+  --cyan:#22d3ee;
+  --grad:linear-gradient(115deg,#a78bfa 0%,#22d3ee 100%);
+  --r-lg:26px;
+  --r-md:16px;
+  --r-sm:10px;
+  --font-display:"Bricolage Grotesque","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-body:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif;
+  --header-h:76px;
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:auto;scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--header-h) + 8px);-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--font-body);font-size:1.0625rem;line-height:1.65;
+  overflow-x:hidden;
+}
+img,svg{max-width:100%}
+h1,h2,h3{font-family:var(--font-display);line-height:1.08;letter-spacing:-0.025em;margin:0;font-weight:700}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:12px;top:-60px;background:var(--cyan);color:#06121a;padding:10px 16px;border-radius:10px;z-index:100;font-weight:600;text-decoration:none}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 10px)}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ---------- Header ---------- */
+.site-header{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+  background:rgba(9,8,15,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(167,139,250,.16);
+}
+.nav-row{display:flex;align-items:center;justify-content:space-between;height:var(--header-h);gap:20px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--font-display);font-weight:800;font-size:1.35rem;letter-spacing:-0.03em}
+.logo svg{width:36px;height:36px;flex:none}
+.logo b{font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{
+  text-decoration:none;color:var(--muted);padding:9px 14px;border-radius:999px;font-weight:500;font-size:.98rem;
+  transition:color .2s,background .2s;
+}
+.nav a:hover{color:var(--text);background:rgba(167,139,250,.12)}
+.nav a[aria-current="true"]{color:var(--text);background:rgba(167,139,250,.16)}
+.menu-btn{display:none;background:var(--surface);border:1px solid var(--line);color:var(--text);width:46px;height:46px;border-radius:14px;cursor:pointer;align-items:center;justify-content:center}
+.menu-btn svg{width:22px;height:22px}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font:600 1rem/1 var(--font-body);padding:16px 26px;border-radius:999px;border:1px solid transparent;
+  text-decoration:none;cursor:pointer;transition:transform .2s ease,box-shadow .25s ease,background .2s,border-color .2s;
+}
+.btn-primary{background:var(--grad);color:#07060d;box-shadow:0 8px 30px -10px rgba(34,211,238,.55)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px rgba(167,139,250,.75)}
+.btn-ghost{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{border-color:var(--violet-soft);background:rgba(167,139,250,.1);transform:translateY(-2px)}
+.btn-sm{padding:12px 18px;font-size:.95rem}
+.nav .btn{color:#07060d;padding:11px 20px;margin-left:8px}
+.nav .btn:hover{color:#07060d;background:var(--grad)}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;padding:clamp(48px,8vw,96px) 0 clamp(60px,9vw,110px);isolation:isolate}
+.hero::before{
+  content:"";position:absolute;inset:-10% -10% auto -10%;height:120%;z-index:-1;
+  background:
+    radial-gradient(48% 52% at 82% 30%,rgba(139,92,246,.30),transparent 70%),
+    radial-gradient(38% 40% at 95% 70%,rgba(34,211,238,.18),transparent 70%),
+    radial-gradient(40% 40% at 5% 5%,rgba(139,92,246,.12),transparent 70%);
+}
+.hero::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:90px;z-index:-1;
+  background:repeating-linear-gradient(180deg,rgba(167,139,250,.10) 0 1px,transparent 1px 10px);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000);mask-image:linear-gradient(180deg,transparent,#000);
+}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(2.5rem,6.2vw,4.7rem);font-weight:800;letter-spacing:-0.04em;max-width:15ch}
+.hero .lead{margin-top:26px;font-size:clamp(1.05rem,1.6vw,1.25rem);color:var(--muted);max-width:52ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+.hero-art{position:relative;max-width:660px;width:100%;margin-inline:auto}
+.hero-art > svg{width:100%;height:auto;display:block;filter:drop-shadow(0 30px 60px rgba(139,92,246,.25))}
+.chip-float{
+  position:absolute;display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;
+  background:rgba(21,19,31,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(167,139,250,.3);font-size:.9rem;font-weight:500;
+  box-shadow:0 14px 40px -14px rgba(0,0,0,.8);
+  animation:bob 6s ease-in-out infinite;
+}
+.chip-float i{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.chip-float.c1{left:2%;bottom:6%}
+.chip-float.c2{right:2%;top:2%;animation-delay:-3s}
+.chip-float.c2 i{background:var(--violet-soft);box-shadow:0 0 12px var(--violet-soft)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.layer{opacity:0;animation:build 11s ease-in-out infinite both;animation-delay:calc(var(--i) * .5s);transform-box:fill-box;transform-origin:center}
+@keyframes build{0%{opacity:0;transform:translateY(8px)}5%,82%{opacity:1;transform:none}94%,100%{opacity:0}}
+.nozzle{animation:sweep 4.5s ease-in-out infinite alternate}
+@keyframes sweep{from{transform:translateX(-38px)}to{transform:translateX(38px)}}
+.laser-dot{animation:pulse 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{0%,100%{opacity:.55;transform:scale(.8)}50%{opacity:1;transform:scale(1.3)}}
+.ray{stroke-dasharray:8 10;animation:flow 2.2s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-36}}
+.laser-sweep{animation:sweep 6s ease-in-out infinite alternate}
+
+/* ---------- Sections ---------- */
+section{position:relative}
+.section{padding:clamp(64px,9vw,120px) 0}
+.section-head{max-width:760px;margin-bottom:clamp(32px,5vw,56px)}
+.section-head h2{font-size:clamp(2rem,4.4vw,3.2rem)}
+.section-head p{margin-top:18px;color:var(--muted);max-width:60ch}
+
+.intro{display:grid;gap:36px}
+.intro-text{max-width:68ch}
+.intro-text h2{font-size:clamp(1.9rem,4vw,2.9rem);margin-bottom:22px}
+.intro-text p{color:var(--muted)}
+.intro-text p + p{margin-top:16px}
+.slogan{
+  font-family:var(--font-display);font-weight:700;font-size:clamp(1.3rem,2.4vw,1.8rem);letter-spacing:-0.02em;
+  margin-top:28px;padding-left:18px;border-left:3px solid transparent;border-image:linear-gradient(180deg,#a78bfa,#22d3ee) 1;
+}
+.benefits{display:grid;gap:18px;grid-template-columns:1fr}
+.benefit{
+  background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:var(--r-lg);padding:28px;
+  transition:transform .3s ease,border-color .3s ease;
+}
+.benefit:hover{transform:translateY(-6px);border-color:rgba(167,139,250,.55)}
+.benefit svg{width:48px;height:48px;margin-bottom:20px}
+.benefit h3{font-size:1.3rem;margin-bottom:10px}
+.benefit p{color:var(--muted);font-size:1rem}
+
+/* ---------- Products ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+.filter{
+  font:500 .98rem var(--font-body);color:var(--muted);background:var(--surface);border:1px solid var(--line);
+  padding:11px 20px;border-radius:999px;cursor:pointer;transition:all .2s;
+}
+.filter:hover{color:var(--text);border-color:var(--violet-soft)}
+.filter[aria-pressed="true"]{background:var(--grad);color:#07060d;border-color:transparent;font-weight:600}
+.grid{display:grid;gap:22px;grid-template-columns:1fr}
+.card{
+  display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .35s;
+}
+.card:hover{transform:translateY(-8px);border-color:rgba(167,139,250,.6);box-shadow:0 26px 50px -26px rgba(139,92,246,.55)}
+.art{
+  position:relative;aspect-ratio:16/10;display:grid;place-items:center;overflow:hidden;
+  background:
+    radial-gradient(110% 90% at 28% 18%,var(--tint),transparent 62%),
+    var(--pattern),
+    var(--surface-2);
+}
+.art.t3d{--tint:rgba(139,92,246,.42);--pattern:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 7px)}
+.art.laser{--tint:rgba(34,211,238,.30);--pattern:repeating-linear-gradient(135deg,rgba(255,255,255,.045) 0 1px,transparent 1px 9px)}
+.art svg.glyph{width:34%;max-width:130px;height:auto;filter:drop-shadow(0 0 18px rgba(139,92,246,.55));transition:transform .4s ease}
+.card:hover .art svg.glyph{transform:scale(1.1) rotate(-3deg)}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tag{
+  position:absolute;left:14px;top:14px;font-size:.8rem;font-weight:600;padding:6px 12px;border-radius:10px;
+  background:rgba(9,8,15,.7);border:1px solid rgba(255,255,255,.12);
+}
+.card-body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card h3{font-size:1.28rem;letter-spacing:-0.02em}
+.card p{color:var(--muted);font-size:.98rem}
+.price{font-size:.88rem;color:var(--violet-soft)}
+.card .btn{margin-top:auto;align-self:flex-start}
+
+/* ---------- Technologies ---------- */
+.tech{background:linear-gradient(180deg,transparent,rgba(139,92,246,.07) 40%,transparent)}
+.tech-grid{display:grid;gap:24px;grid-template-columns:1fr}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column}
+.panel-art{background:radial-gradient(90% 90% at 50% 0,rgba(139,92,246,.28),transparent 70%),var(--bg-2);border-bottom:1px solid var(--line);padding:18px}
+.panel-art svg{display:block;width:100%;height:auto}
+.panel-body{padding:28px;display:flex;flex-direction:column;gap:18px}
+.panel h3{font-size:1.7rem}
+.panel p{color:var(--muted)}
+.flow{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.flow li{display:flex;gap:14px;align-items:flex-start;color:var(--text);font-size:.98rem}
+.flow span{
+  flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 .88rem var(--font-display);
+  background:var(--grad);color:#07060d;
+}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pills li{list-style:none;padding:7px 13px;border-radius:10px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.22);font-size:.88rem}
+.pills{padding:0;margin:0}
+
+/* ---------- Quote form ---------- */
+.quote{
+  display:grid;gap:36px;grid-template-columns:1fr;align-items:start;
+  background:linear-gradient(145deg,rgba(139,92,246,.16),rgba(34,211,238,.08) 60%,rgba(21,19,31,.6));
+  border:1px solid rgba(167,139,250,.28);border-radius:34px;padding:clamp(24px,5vw,56px);
+}
+.quote-intro h2{font-size:clamp(2rem,4.2vw,3rem);margin-bottom:18px}
+.quote-intro p{color:var(--muted);max-width:44ch}
+.quote-intro ul{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:12px}
+.quote-intro li{display:flex;gap:12px;align-items:flex-start;font-size:.98rem}
+.quote-intro li::before{content:"";flex:none;width:10px;height:10px;margin-top:9px;border-radius:2px;background:var(--grad);transform:rotate(45deg)}
+form{display:grid;gap:18px}
+.row{display:grid;gap:18px;grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:8px}
+label,.label{font-weight:600;font-size:.95rem}
+.opt{font-weight:400;color:var(--muted)}
+input,select,textarea{
+  font:inherit;color:var(--text);background:rgba(9,8,15,.7);border:1px solid var(--line);border-radius:14px;padding:14px 16px;width:100%;
+  transition:border-color .2s,box-shadow .2s;
+}
+input::placeholder,textarea::placeholder{color:#8a86a3}
+textarea{min-height:130px;resize:vertical}
+input:hover,select:hover,textarea:hover{border-color:#4a4570}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.18)}
+input:user-invalid,textarea:user-invalid,select:user-invalid{border-color:#fb7185}
+input[type=file]{padding:11px 14px;cursor:pointer}
+input[type=file]::file-selector-button{font:600 .9rem var(--font-body);margin-right:14px;padding:8px 14px;border-radius:999px;border:0;background:var(--surface-2);color:var(--text);cursor:pointer}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23a78bfa' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:44px}
+select option,select optgroup{background:#15131f;color:var(--text)}
+.hint{font-size:.85rem;color:var(--muted)}
+.status{display:none;border-radius:16px;padding:18px 20px;font-size:.96rem;border:1px solid}
+.status.show{display:block}
+.status.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.45)}
+.status.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.45)}
+.status.err{background:rgba(251,113,133,.08);border-color:rgba(251,113,133,.45)}
+.status strong{display:block;margin-bottom:6px}
+.status textarea{margin-top:12px;min-height:150px;font-size:.9rem}
+.status .btn{margin-top:12px}
+
+/* ---------- About ---------- */
+.about-grid{display:grid;gap:22px;grid-template-columns:1fr}
+.member{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px;text-align:left;
+  transition:transform .35s ease,border-color .3s;
+}
+.member:hover{transform:translateY(-6px);border-color:rgba(167,139,250,.55)}
+.avatar{
+  width:84px;height:84px;border-radius:26px;display:grid;place-items:center;margin-bottom:22px;
+  font:800 1.9rem var(--font-display);color:#07060d;background:var(--grad);
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+  clip-path:none;
+  position:relative;
+}
+.avatar::after{content:"";position:absolute;inset:-6px;border-radius:30px;border:1px dashed rgba(167,139,250,.45)}
+.member h3{font-size:1.4rem}
+.member .role{margin-top:4px;color:var(--cyan);font-size:.95rem}
+.member .bio{margin-top:14px;color:var(--muted);font-size:.98rem}
+.values{display:grid;gap:14px;grid-template-columns:1fr;margin-top:36px}
+.value{padding:22px 24px;border-radius:var(--r-md);background:var(--bg-2);border:1px solid var(--line)}
+.value h3{font-size:1.1rem;margin-bottom:6px}
+.value p{color:var(--muted);font-size:.95rem}
+
+/* ---------- Contact ---------- */
+.contact-grid{display:grid;gap:36px;grid-template-columns:1fr}
+.contact-info h2{font-size:clamp(2rem,4.2vw,3rem);margin-bottom:18px}
+.contact-info > p{color:var(--muted);max-width:46ch}
+.info-list{list-style:none;padding:0;margin:28px 0 0;display:grid;gap:14px}
+.info-item{display:flex;flex-direction:column;gap:2px;padding:16px 18px;border-radius:var(--r-md);background:var(--surface);border:1px solid var(--line)}
+.info-item small{color:var(--muted);font-size:.85rem}
+.placeholder{color:#cdbffd;border-bottom:1px dashed rgba(167,139,250,.6);width:fit-content}
+.socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.social{padding:10px 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:.92rem;text-decoration:none;transition:border-color .2s,background .2s}
+a.social:hover{border-color:var(--violet-soft);background:rgba(167,139,250,.12)}
+span.social{border-style:dashed;color:var(--muted)}
+.form-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(22px,4vw,36px)}
+
+/* ---------- Footer ---------- */
+.site-footer{border-top:1px solid var(--line);background:var(--bg-2);padding:56px 0 32px}
+.foot{display:grid;gap:30px;grid-template-columns:1fr}
+.foot p.sl{color:var(--muted);margin-top:14px;max-width:34ch}
+.foot nav{display:flex;flex-wrap:wrap;gap:6px 22px;align-content:flex-start}
+.foot nav a{color:var(--muted);text-decoration:none;padding:6px 0}
+.foot nav a:hover{color:var(--text);text-decoration:underline}
+.copy{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+
+/* ---------- Reveal ---------- */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.js .reveal.in{opacity:1;transform:none}
+
+/* ---------- Responsive ---------- */
+@media (min-width:640px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .row{grid-template-columns:1fr 1fr}
+  .values{grid-template-columns:repeat(2,1fr)}
+}
+@media (min-width:900px){
+  .hero-grid{grid-template-columns:1.02fr 1fr;gap:24px}
+  .benefits{grid-template-columns:repeat(3,1fr)}
+  .about-grid{grid-template-columns:repeat(3,1fr)}
+  .tech-grid{grid-template-columns:repeat(2,1fr)}
+  .quote{grid-template-columns:.85fr 1.15fr;gap:56px}
+  .contact-grid{grid-template-columns:1fr 1.1fr;gap:56px}
+  .foot{grid-template-columns:1.2fr 1fr}
+  .values{grid-template-columns:repeat(4,1fr)}
+}
+@media (min-width:1080px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:899px){
+  .menu-btn{display:inline-flex}
+  .nav{
+    position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;gap:2px;padding:14px 20px 22px;
+    background:rgba(9,8,15,.97);border-bottom:1px solid var(--line);display:none;
+  }
+  .nav.open{display:flex}
+  .nav a{padding:14px 16px;font-size:1.05rem}
+  .nav .btn{margin:10px 0 0;text-align:center}
+}
+@media (max-width:520px){
+  .chip-float{font-size:.8rem;padding:8px 12px}
+  .hero-cta .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .layer{opacity:1}
+  .js .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#tartalom">Ugrás a tartalomra</a>
+
+<!-- Shared SVG gradients -->
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+    <linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="logo" href="#fooldal" aria-label="PrizmaCRAFT – főoldal">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M20 3 37 33H3z" fill="rgba(167,139,250,.14)" stroke="url(#sg)" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M20 3v30M11.5 18 28.5 18" stroke="url(#sg)" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+        <path d="M3 33 20 26 37 33" fill="none" stroke="url(#sg)" stroke-width="1.6" stroke-linejoin="round" opacity=".7"/>
+      </svg>
+      <span>Prizma<b>CRAFT</b></span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="nav" aria-label="Menü megnyitása">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <nav class="nav" id="nav" aria-label="Főmenü">
+      <a href="#fooldal">Főoldal</a>
+      <a href="#termekek">Termékeink</a>
+      <a href="#technologiak">Technológiáink</a>
+      <a href="#rolunk">Rólunk</a>
+      <a href="#kapcsolat">Kapcsolat</a>
+      <a class="btn btn-primary" href="#ajanlat">Ajánlatot kérek</a>
+    </nav>
+  </div>
+</header>
+
+<main id="tartalom">
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="fooldal" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div>
+      <h1 id="hero-title">Egyedi ötletekből kézzelfogható alkotások.</h1>
+      <p class="lead">Személyre szabott ajándékok és használati tárgyak 3D nyomtatással, lézervágással és gravírozással. Te megálmodod, mi megalkotjuk.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#termekek">Fedezd fel termékeinket</a>
+        <a class="btn btn-ghost" href="#ajanlat">Kérj egyedi ajánlatot</a>
+      </div>
+    </div>
+
+    <div class="hero-art">
+      <svg viewBox="0 0 640 520" role="img" aria-label="Illusztráció: egy 3D nyomtató rétegenként épít fel egy vázát, egy prizma a fénysugarat színekre bontja, a lézer pedig egy fatáblát gravíroz.">
+        <defs>
+          <linearGradient id="hLayer" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+          <linearGradient id="hBeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".95"/></linearGradient>
+          <linearGradient id="hPrism" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa" stop-opacity=".55"/><stop offset="1" stop-color="#22d3ee" stop-opacity=".25"/></linearGradient>
+          <linearGradient id="hFrame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3556"/><stop offset="1" stop-color="#1d1a2b"/></linearGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+
+        <!-- light beam + spectrum (behind everything) -->
+        <line x1="0" y1="150" x2="486" y2="150" stroke="url(#hBeam)" stroke-width="3" filter="url(#glow)"/>
+        <g stroke-width="3" stroke-linecap="round" fill="none" filter="url(#glow)">
+          <line class="ray" x1="552" y1="150" x2="640" y2="108" stroke="#8b5cf6"/>
+          <line class="ray" x1="552" y1="150" x2="640" y2="140" stroke="#a78bfa" style="animation-delay:-.4s"/>
+          <line class="ray" x1="552" y1="150" x2="640" y2="172" stroke="#60a5fa" style="animation-delay:-.8s"/>
+          <line class="ray" x1="552" y1="150" x2="640" y2="204" stroke="#22d3ee" style="animation-delay:-1.2s"/>
+          <line class="ray" x1="552" y1="150" x2="640" y2="236" stroke="#67e8f9" style="animation-delay:-1.6s"/>
+        </g>
+        <!-- prism -->
+        <path d="M520 86 592 214H448z" fill="url(#hPrism)" stroke="#c4b5fd" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M520 86v128M484 150h72" stroke="#fff" stroke-opacity=".25" stroke-width="1.2"/>
+
+        <!-- printer frame -->
+        <rect x="100" y="420" width="330" height="22" rx="8" fill="url(#hFrame)" stroke="#4b4570"/>
+        <rect x="112" y="78" width="14" height="344" rx="5" fill="url(#hFrame)" stroke="#4b4570"/>
+        <rect x="404" y="78" width="14" height="344" rx="5" fill="url(#hFrame)" stroke="#4b4570"/>
+        <rect x="104" y="64" width="322" height="20" rx="8" fill="url(#hFrame)" stroke="#4b4570"/>
+        <rect x="112" y="214" width="306" height="12" rx="5" fill="#2a2640" stroke="#4b4570"/>
+
+        <!-- printed vase -->
+        <g id="heroLayers"></g>
+
+        <!-- nozzle -->
+        <g class="nozzle">
+          <rect x="236" y="222" width="48" height="24" rx="6" fill="#2a2640" stroke="#a78bfa"/>
+          <path d="M246 246h28l-9 18h-10z" fill="#c4b5fd"/>
+          <circle cx="260" cy="268" r="3" fill="#22d3ee" filter="url(#glow)"/>
+        </g>
+
+        <!-- laser engraving plaque -->
+        <rect x="462" y="348" width="150" height="92" rx="12" fill="#241f35" stroke="#4b4570"/>
+        <g fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
+          <path d="M537 366 566 414H508z"/><path d="M537 366v48M522 392h30" opacity=".6"/>
+        </g>
+        <path d="M480 428h114" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <g class="laser-sweep">
+          <rect x="515" y="262" width="44" height="26" rx="7" fill="#2a2640" stroke="#22d3ee"/>
+          <line x1="537" y1="288" x2="537" y2="388" stroke="#22d3ee" stroke-width="2.5" filter="url(#glow)"/>
+          <circle class="laser-dot" cx="537" cy="390" r="5" fill="#67e8f9" filter="url(#glow)"/>
+        </g>
+      </svg>
+      <div class="chip-float c1"><i></i>3D nyomtatás</div>
+      <div class="chip-float c2"><i></i>Lézergravírozás</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INTRO ================= -->
+<section class="section" aria-labelledby="intro-title" style="padding-top:0">
+  <div class="wrap intro">
+    <div class="intro-text reveal">
+      <h2 id="intro-title">Az ötletedből tárgy lesz, ami csak a tiéd.</h2>
+      <p>A PrizmaCRAFT célja, hogy az ügyfelek egyedi ötleteit precíz, személyre szabott és kézzelfogható termékekké alakítsa. A vállalkozás ötvözi a modern technológiát, a kreativitást és a minőségi kézműves munkát.</p>
+      <p class="slogan">„A te ötleted. A mi alkotásunk.”</p>
+    </div>
+    <div class="benefits">
+      <article class="benefit reveal">
+        <svg viewBox="0 0 64 64" fill="none" stroke="url(#sg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 54l5-15L45 9l10 10-30 30z"/><path d="M38 16l10 10M10 54l11-4"/></svg>
+        <h3>Teljesen egyedi tervezés</h3>
+        <p>Nem sablonból dolgozunk: az elképzelésedből indulunk ki, és a méretet, a formát meg a feliratot is hozzád igazítjuk.</p>
+      </article>
+      <article class="benefit reveal">
+        <svg viewBox="0 0 64 64" fill="none" stroke="url(#sg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="32" cy="32" r="9"/><path d="M32 8v8M32 48v8M8 32h8M48 32h8M15 15l6 6M43 43l6 6M49 15l-6 6M21 43l-6 6"/></svg>
+        <h3>Modern gyártási technológiák</h3>
+        <p>3D nyomtatás, lézervágás és gravírozás: a digitális terv pontosan, tárgyként ér vissza hozzád.</p>
+      </article>
+      <article class="benefit reveal">
+        <svg viewBox="0 0 64 64" fill="none" stroke="url(#sg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 20h44M10 32h44M10 44h44"/><circle cx="22" cy="20" r="5" fill="#09080f"/><circle cx="42" cy="32" r="5" fill="#09080f"/><circle cx="28" cy="44" r="5" fill="#09080f"/></svg>
+        <h3>Személyre szabott megoldások</h3>
+        <p>Ajándékba, otthonra vagy céges használatra: közösen finomítjuk az ötletet, amíg tökéletesen illik hozzád.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="section" id="termekek" aria-labelledby="prod-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2 id="prod-title">Termékeink</h2>
+      <p>Két műhely, számtalan lehetőség. Az alábbi termékek mind egyedi igény szerint készülnek, az árak megbeszélés alapján alakulnak.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Termékkategóriák szűrése">
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">Mind</button>
+      <button class="filter" type="button" data-filter="3d" aria-pressed="false">3D nyomtatott termékek</button>
+      <button class="filter" type="button" data-filter="laser" aria-pressed="false">Lézervágás és gravírozás</button>
+    </div>
+    <div class="grid" id="productGrid" aria-live="polite"></div>
+    <noscript><p>A termékek megjelenítéséhez kapcsold be a JavaScriptet.</p></noscript>
+  </div>
+</section>
+
+<!-- ================= TECHNOLOGIES ================= -->
+<section class="section tech" id="technologiak" aria-labelledby="tech-title">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2 id="tech-title">Technológiáink</h2>
+      <p>Két eljárás, amely a digitális ötletet kézzelfogható tárggyá alakítja.</p>
+    </div>
+    <div class="tech-grid">
+      <article class="panel reveal">
+        <div class="panel-art" id="techPrintArt"></div>
+        <div class="panel-body">
+          <h3>3D nyomtatás</h3>
+          <p>Digitális modellekből egyedi figurák, dekorációk, praktikus kiegészítők és személyre szabott ajándékok készülhetnek: a nyomtató rétegről rétegre építi fel a tárgyat.</p>
+          <ol class="flow">
+            <li><span>1</span>Digitális modell tervezése vagy az ötleted alapján készített terv</li>
+            <li><span>2</span>Nyomtatás réteg a rétegre</li>
+            <li><span>3</span>Utómunka és a kész tárgy átadása</li>
+          </ol>
+          <ul class="pills" aria-label="Mit készíthetünk 3D nyomtatással?"><li>Figurák</li><li>Dekorációk</li><li>Praktikus kiegészítők</li><li>Személyre szabott ajándékok</li></ul>
+        </div>
+      </article>
+      <article class="panel reveal">
+        <div class="panel-art" id="techLaserArt"></div>
+        <div class="panel-body">
+          <h3>Lézervágás és gravírozás</h3>
+          <p>A fa- és plexialapanyagok a lézerrel pontosan kivághatók és díszíthetők: így lesz belőlük egyedi dekoráció, feliratozott ajándék vagy céges termék.</p>
+          <ol class="flow">
+            <li><span>1</span>Terv, felirat vagy logó előkészítése</li>
+            <li><span>2</span>Vágás és gravírozás fán vagy plexin</li>
+            <li><span>3</span>Összeállítás és a kész termék átadása</li>
+          </ol>
+          <ul class="pills" aria-label="Mit készíthetünk lézerrel?"><li>Egyedi dekorációk</li><li>Feliratozott ajándékok</li><li>Céges termékek</li></ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUOTE FORM ================= -->
+<section class="section" id="ajanlat" aria-labelledby="quote-title" style="padding-top:clamp(40px,6vw,80px)">
+  <div class="wrap">
+    <div class="quote reveal">
+      <div class="quote-intro">
+        <h2 id="quote-title">Kérj egyedi ajánlatot</h2>
+        <p>Mesélj az elképzelésedről, és mi visszajelzünk a megvalósítás lehetőségeiről. Egy rövid leírás, egy vázlat vagy egy referenciakép is elég a kezdéshez.</p>
+        <ul>
+          <li>Minden termék egyedi egyeztetés alapján készül</li>
+          <li>Az ár a méret, az anyag és az elképzelésed alapján alakul</li>
+          <li>Referenciafájlt is csatolhatsz</li>
+        </ul>
+      </div>
+      <form id="quoteForm" novalidate>
+        <div class="row">
+          <div class="field"><label for="q-name">Neved</label><input id="q-name" name="nev" type="text" autocomplete="name" required placeholder="Pl. Kovács Anna"></div>
+          <div class="field"><label for="q-email">E-mail-címed</label><input id="q-email" name="email" type="email" autocomplete="email" required placeholder="nev@példa.hu"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="q-type">Kívánt termék típusa</label><select id="q-type" name="termek" required></select></div>
+          <div class="field"><label for="q-qty">Kívánt mennyiség</label><input id="q-qty" name="mennyiseg" type="number" min="1" step="1" value="1" inputmode="numeric" required></div>
+        </div>
+        <div class="field"><label for="q-desc">Az elképzelésed röviden</label><textarea id="q-desc" name="leiras" required placeholder="Mit szeretnél? Milyen méretben, felirattal, mintával, milyen alkalomra?"></textarea></div>
+        <div class="field">
+          <label for="q-file">Referenciafájl <span class="opt">(opcionális)</span></label>
+          <input id="q-file" name="fajl" type="file" accept="image/*,.pdf,.svg,.dxf,.stl,.obj">
+          <span class="hint">Kép, vázlat vagy terv. A fájl csak beállított háttérrendszerrel továbbítható.</span>
+        </div>
+        <button class="btn btn-primary" type="submit">Ajánlatot kérek</button>
+        <div class="status" id="quoteStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="section" id="rolunk" aria-labelledby="about-title" style="padding-top:clamp(40px,6vw,80px)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2 id="about-title">Rólunk</h2>
+      <p>A PrizmaCRAFT három alapító csapattagja kreativitással, a technológia iránti érdeklődéssel és precizitással dolgozik azon, hogy minden ötlet egyedi tárggyá váljon.</p>
+    </div>
+    <div class="about-grid" id="teamGrid"></div>
+    <div class="values">
+      <div class="value reveal"><h3>Kreativitás</h3><p>Minden megrendelés új ötlet, amit érdemes jól kitalálni.</p></div>
+      <div class="value reveal"><h3>Technológia iránti érdeklődés</h3><p>Szeretjük a modern gyártási eljárásokat, és a lehetőségeikben gondolkodunk.</p></div>
+      <div class="value reveal"><h3>Precizitás</h3><p>A részletek számítanak: a végeredménynek pontosnak és tisztának kell lennie.</p></div>
+      <div class="value reveal"><h3>Egyedi megoldások</h3><p>Elköteleződtünk amellett, hogy a tárgy valóban hozzád szóljon.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section" id="kapcsolat" aria-labelledby="contact-title" style="padding-top:clamp(40px,6vw,80px)">
+  <div class="wrap contact-grid">
+    <div class="contact-info reveal">
+      <h2 id="contact-title">Kapcsolat</h2>
+      <p>Van egy ötleted? Írd meg nekünk, akár még csak félkész formában is. Közösen megtaláljuk a megvalósítás módját.</p>
+      <ul class="info-list" id="infoList"></ul>
+      <div class="socials" id="socials" aria-label="Közösségi média"></div>
+    </div>
+    <div class="form-card reveal">
+      <form id="contactForm" novalidate>
+        <div class="field"><label for="c-name">Neved</label><input id="c-name" name="nev" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="c-email">E-mail-címed</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="c-msg">Üzeneted</label><textarea id="c-msg" name="uzenet" required placeholder="Írd le röviden az ötletedet vagy a kérdésedet."></textarea></div>
+        <button class="btn btn-primary" type="submit">Üzenet küldése</button>
+        <div class="status" id="contactStatus" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#fooldal" aria-label="PrizmaCRAFT – vissza a tetejére">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 37 33H3z" fill="rgba(167,139,250,.14)" stroke="url(#sg)" stroke-width="2.4" stroke-linejoin="round"/><path d="M20 3v30" stroke="url(#sg)" stroke-width="1.6" opacity=".7"/></svg>
+          <span>Prizma<b>CRAFT</b></span>
+        </a>
+        <p class="sl">„A te ötleted. A mi alkotásunk.”</p>
+      </div>
+      <nav aria-label="Lábléc navigáció">
+        <a href="#fooldal">Főoldal</a>
+        <a href="#termekek">Termékeink</a>
+        <a href="#technologiak">Technológiáink</a>
+        <a href="#ajanlat">Ajánlatkérés</a>
+        <a href="#rolunk">Rólunk</a>
+        <a href="#kapcsolat">Kapcsolat</a>
+      </nav>
+    </div>
+    <p class="copy">© <span id="year">2026</span> PrizmaCRAFT. Minden jog fenntartva.</p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   KONFIGURÁCIÓ – itt egyszerűen módosíthatók az adatok
+   ========================================================= */
+const CONFIG = {
+  // Ha van űrlapfogadó háttérrendszer (pl. saját szerver vagy űrlapszolgáltatás),
+  // ide írd az URL-jét. Üresen hagyva az űrlap NEM küld el semmit, és ezt jelzi is.
+  formEndpoint: "",
+
+  // Kapcsolati adatok. Üres érték = helyőrző jelenik meg.
+  email: "",
+  social: [
+    { name: "Instagram", url: "" },
+    { name: "Facebook",  url: "" },
+    { name: "TikTok",    url: "" }
+  ]
+};
+
+const PRICE_NOTE = "Ár: egyedi egyeztetés alapján";
+
+/* A „glyph” egy 64×64-es vonalrajz; az „image” mezőbe valódi fotó URL-je vagy data URI írható */
+const PRODUCTS = [
+  { cat:"3d", title:"Litofán lámpák és fényképek",
+    desc:"A kedvenc fényképed rétegvastagsággal formált domborműként jelenik meg, hátulról megvilágítva pedig életre kel.",
+    alt:"Illusztráció: litofán lámpa, benne tájkép hegyekkel és nappal.", image:"",
+    glyph:'<rect x="14" y="8" width="36" height="46" rx="5"/><path d="M18 44l9-12 7 8 5-6 7 10z"/><circle cx="40" cy="22" r="4"/><path d="M22 58h20"/>' },
+  { cat:"3d", title:"Egyedi fali kulcstartók",
+    desc:"Méretre és stílusra szabott kulcstartó, amely a te lakásod hangulatához illeszkedik, akár felirattal vagy mintával.",
+    alt:"Illusztráció: fali kulcstartó lap három akasztóval.", image:"",
+    glyph:'<rect x="8" y="12" width="48" height="12" rx="4"/><path d="M18 24v12a4 4 0 0 0 8 0M30 24v18a4 4 0 0 0 8 0M42 24v12a4 4 0 0 0 8 0"/>' },
+  { cat:"3d", title:"Névre szóló asztali rendszerezők",
+    desc:"Tolltartó, kütyütartó vagy íróasztali rendszerező, amelyre akár a neved is rákerülhet.",
+    alt:"Illusztráció: rekeszes asztali rendszerező tollakkal.", image:"",
+    glyph:'<rect x="8" y="26" width="48" height="26" rx="4"/><path d="M24 26v26M40 26v26M8 39h48M22 26l3-14M34 26l-2-16"/>' },
+  { cat:"3d", title:"Cosplay-kiegészítők",
+    desc:"Jelmezekhez készülő kiegészítők, kellékek és apró részletek, pontosan a te elképzelésed szerint.",
+    alt:"Illusztráció: futurisztikus sisak vagy maszk.", image:"",
+    glyph:'<path d="M14 38c0-15 8-26 18-26s18 11 18 26v8l-8 7H22l-8-7z"/><path d="M20 34h10l2 5 2-5h10"/>' },
+  { cat:"3d", title:"Társasjáték-kiegészítők és rendszerezők",
+    desc:"Praktikus tárolók, tartók és kiegészítők, amelyek rendben tartják a játékelemeket.",
+    alt:"Illusztráció: hatszögletű játékelem kockapontokkal.", image:"",
+    glyph:'<path d="M32 6l21 12v26L32 58 11 44V18z"/><circle cx="25" cy="24" r="2"/><circle cx="39" cy="24" r="2"/><circle cx="32" cy="32" r="2"/><circle cx="25" cy="40" r="2"/><circle cx="39" cy="40" r="2"/>' },
+  { cat:"3d", title:"Egyedi vázák és lakásdekorációk",
+    desc:"Réteges, formatervezett dísztárgyak, amelyeknél a forma, a méret és a mintázat is egyedi lehet.",
+    alt:"Illusztráció: réteges váza.", image:"",
+    glyph:'<path d="M24 8h16M26 8c0 9-14 14-14 28 0 11 8 19 20 19s20-8 20-19C52 22 38 17 38 8"/><path d="M16 34h32M15 42h34M19 50h26"/>' },
+  { cat:"laser", title:"Fa- és plexi fényképtartók",
+    desc:"Fából vagy plexiből vágott állványos és asztali fényképtartók, a kedvenc pillanataidnak.",
+    alt:"Illusztráció: fényképtartó keret állvánnyal.", image:"",
+    glyph:'<rect x="10" y="10" width="44" height="34" rx="3"/><rect x="17" y="17" width="30" height="20" rx="1"/><path d="M24 44l-7 12M40 44l7 12"/>' },
+  { cat:"laser", title:"Egyedi faliórák",
+    desc:"Lézerrel vágott és gravírozott faliórák, amelyeknek a számlapja és mintája is egyedi lehet.",
+    alt:"Illusztráció: kerek faliórák számlapja mutatókkal.", image:"",
+    glyph:'<circle cx="32" cy="32" r="23"/><path d="M32 16v16l10 6M32 10v3M32 51v3M10 32h3M51 32h3"/>' },
+  { cat:"laser", title:"Gravírozott díszdobozok",
+    desc:"Díszdobozok személyes felirattal, mintával vagy dedikációval: ajándékba vagy emléktárolásra.",
+    alt:"Illusztráció: díszdoboz fedéllel és szalaggal.", image:"",
+    glyph:'<path d="M10 26h44v28H10zM7 14h50v12H7z"/><path d="M32 14v40M32 14c-8-8-14 0-8 3M32 14c8-8 14 0 8 3"/>' },
+  { cat:"laser", title:"Fűszer- és teásdobozok",
+    desc:"Rekeszes, feliratozott tárolódobozok a konyhába, amelyek rendben tartják a fűszereket és a teákat.",
+    alt:"Illusztráció: rekeszes teásdoboz levéllel.", image:"",
+    glyph:'<rect x="10" y="16" width="44" height="38" rx="4"/><path d="M10 28h44M32 28v26"/><path d="M42 10c-6 0-8 4-6 8 5 0 8-3 6-8z"/>' },
+  { cat:"laser", title:"Esküvői dekorációk, ültetőkártyák és tortadíszek",
+    desc:"Egyedi esküvői kiegészítők: ültetőkártyák, feliratok és tortadíszek a nagy nap hangulatához igazítva.",
+    alt:"Illusztráció: két összekapcsolódó gyűrű gyémánttal.", image:"",
+    glyph:'<circle cx="23" cy="40" r="13"/><circle cx="41" cy="40" r="13"/><path d="M26 10h12l5 7-11 11-11-11z"/>' },
+  { cat:"laser", title:"Céges kulcstartók, névjegykártyák és logózott táblák",
+    desc:"Logóddal ellátott céges ajándékok és irodai táblák, amelyek a márkádat képviselik.",
+    alt:"Illusztráció: logós tábla felirattal.", image:"",
+    glyph:'<rect x="8" y="16" width="48" height="32" rx="5"/><path d="M20 24l7 12h-14z"/><path d="M34 26h16M34 34h12"/>' }
+];
+
+const TEAM = [
+  { name:"Póti László",    role:"[Szerepkör helye]", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" },
+  { name:"Székely Milán",  role:"[Szerepkör helye]", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" },
+  { name:"Antal András",   role:"[Szerepkör helye]", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" }
+];
+
+/* ========================================================= */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.documentElement.classList.add('js');
+$('#year').textContent = new Date().getFullYear();
+
+/* ---------- Hero printed vase ---------- */
+(function(){
+  const g = $('#heroLayers'); let out = '';
+  const N = 14;
+  for (let i = 0; i < N; i++) {
+    const t = i / (N - 1);
+    const w = 52 + 44 * Math.sin(Math.PI * Math.min(1, t * 0.95 + 0.04)) - 14 * t * t;
+    const y = 410 - i * 11;
+    out += `<rect class="layer" style="--i:${i}" x="${(260 - w / 2).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="10" rx="4.5" fill="url(#hLayer)" opacity="${(0.6 + 0.4 * (1 - t)).toFixed(2)}"/>`;
+  }
+  g.innerHTML = out;
+})();
+
+/* ---------- Technology illustrations ---------- */
+(function(){
+  // 3D printing: wireframe model -> printed layers
+  let layers = '';
+  for (let i = 0; i < 12; i++) {
+    const t = i / 11;
+    const w = 70 + 46 * Math.sin(Math.PI * (t * .9 + .05)) - 10 * t;
+    layers += `<rect x="${(345 - w/2).toFixed(1)}" y="${232 - i*13}" width="${w.toFixed(1)}" height="11" rx="5" fill="url(#fg)" opacity="${(.55 + .45*(1-t)).toFixed(2)}"/>`;
+  }
+  $('#techPrintArt').innerHTML = `
+  <svg viewBox="0 0 480 280" role="img" aria-label="Illusztráció: bal oldalon egy digitális vázamodell drótvázas rajza, jobb oldalon ugyanaz a váza rétegenként felépítve.">
+    <g fill="none" stroke="#22d3ee" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="5 5" opacity=".9">
+      <path d="M95 60h50c0 30 36 44 36 90 0 36-28 66-61 66s-61-30-61-66c0-46 36-60 36-90z" transform="translate(-5 4)"/>
+      <ellipse cx="116" cy="108" rx="34" ry="8"/><ellipse cx="116" cy="148" rx="48" ry="11"/><ellipse cx="116" cy="188" rx="40" ry="9"/>
+      <path d="M116 64v152" opacity=".5"/>
+    </g>
+    <path d="M200 140h60" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M252 130l12 10-12 10" fill="none" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="270" y="236" width="150" height="12" rx="5" fill="#2a2640" stroke="#4b4570"/>
+    ${layers}
+    <path d="M330 52h30l-8 18h-14z" fill="#c4b5fd"/><rect x="318" y="30" width="54" height="24" rx="6" fill="#2a2640" stroke="#a78bfa"/>
+  </svg>`;
+
+  // Laser: wood plank + plexi + laser head
+  $('#techLaserArt').innerHTML = `
+  <svg viewBox="0 0 480 280" role="img" aria-label="Illusztráció: lézerfej egy fatáblát gravíroz, mellette egy áttetsző plexilap látszik.">
+    <defs>
+      <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a5230"/><stop offset="1" stop-color="#4f3320"/></linearGradient>
+      <filter id="glow2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="M300 130 440 118v110l-140 12z" fill="rgba(34,211,238,.14)" stroke="#67e8f9" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M312 150 428 142" stroke="#67e8f9" stroke-width="1.4" opacity=".6"/>
+    <rect x="40" y="150" width="270" height="100" rx="10" fill="url(#wood)" stroke="#9a6d41"/>
+    <g stroke="#2e1d11" stroke-width="1.2" fill="none" opacity=".5" stroke-linecap="round">
+      <path d="M52 172c60-8 100 8 160-2s70-4 90-2M52 200c70 8 110-8 170 2s60 6 80 0M52 228c50-6 120 6 170-2s60-2 80 2"/>
+    </g>
+    <g fill="none" stroke="#fde68a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow2)">
+      <path d="M175 168 215 232H135z"/><path d="M175 168v64M155 202h40" opacity=".6"/>
+      <path d="M62 236h58M232 236h60" opacity=".7"/>
+    </g>
+    <g class="laser-sweep">
+      <rect x="150" y="26" width="52" height="34" rx="8" fill="#2a2640" stroke="#22d3ee"/>
+      <rect x="164" y="60" width="24" height="12" rx="3" fill="#3a3556"/>
+      <line x1="176" y1="72" x2="176" y2="168" stroke="#22d3ee" stroke-width="2.6" filter="url(#glow2)"/>
+      <circle class="laser-dot" cx="176" cy="170" r="5" fill="#67e8f9" filter="url(#glow2)"/>
+    </g>
+  </svg>`;
+})();
+
+/* ---------- Products ---------- */
+const grid = $('#productGrid');
+const typeSelect = $('#q-type');
+function renderProducts(filter='all'){
+  const list = PRODUCTS.filter(p => filter==='all' || p.cat===filter);
+  grid.innerHTML = list.map((p, i) => {
+    const art = p.image
+      ? `<img src="${esc(p.image)}" alt="${esc(p.alt)}" loading="lazy">`
+      : `<svg class="glyph" viewBox="0 0 64 64" fill="none" stroke="url(#sg)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${esc(p.alt)}">${p.glyph}</svg>`;
+    return `<article class="card reveal" data-idx="${PRODUCTS.indexOf(p)}">
+      <div class="art ${p.cat==='3d'?'t3d':'laser'}">${art}<span class="tag">${p.cat==='3d'?'3D nyomtatás':'Lézervágás és gravírozás'}</span></div>
+      <div class="card-body">
+        <h3>${esc(p.title)}</h3>
+        <p>${esc(p.desc)}</p>
+        <span class="price">${PRICE_NOTE}</span>
+        <button class="btn btn-ghost btn-sm" type="button" data-interest="${PRODUCTS.indexOf(p)}" aria-label="Érdekel: ${esc(p.title)}">Érdekel</button>
+      </div>
+    </article>`;
+  }).join('');
+  observeReveals();
+}
+$$('.filter').forEach(b => b.addEventListener('click', () => {
+  $$('.filter').forEach(x => x.setAttribute('aria-pressed', String(x===b)));
+  renderProducts(b.dataset.filter);
+}));
+grid.addEventListener('click', e => {
+  const btn = e.target.closest('[data-interest]'); if(!btn) return;
+  const p = PRODUCTS[+btn.dataset.interest];
+  typeSelect.value = p.title;
+  const d = $('#q-desc');
+  if (!d.value.trim()) d.value = `Érdekel ez a termék: ${p.title}. `;
+  $('#ajanlat').scrollIntoView();
+  setTimeout(() => $('#q-name').focus({preventScroll:true}), 450);
+});
+
+/* Select options */
+(function(){
+  const g3 = PRODUCTS.filter(p=>p.cat==='3d'), gl = PRODUCTS.filter(p=>p.cat==='laser');
+  const opt = p => `<option value="${esc(p.title)}">${esc(p.title)}</option>`;
+  typeSelect.innerHTML = `<option value="" disabled selected>Válassz terméktípust</option>
+    <optgroup label="3D nyomtatott termékek">${g3.map(opt).join('')}</optgroup>
+    <optgroup label="Lézervágás és gravírozás">${gl.map(opt).join('')}</optgroup>
+    <option value="Egyéb / egyedi ötlet">Egyéb / egyedi ötlet</option>`;
+})();
+
+/* ---------- Team ---------- */
+$('#teamGrid').innerHTML = TEAM.map(m => {
+  const ini = m.name.split(' ').map(w => w[0]).join('');
+  return `<article class="member reveal">
+    <div class="avatar" aria-hidden="true">${esc(ini)}</div>
+    <h3>${esc(m.name)}</h3>
+    <p class="role"><span class="placeholder">${esc(m.role)}</span></p>
+    <p class="bio">${esc(m.bio)}</p>
+  </article>`;
+}).join('');
+
+/* ---------- Contact info ---------- */
+$('#infoList').innerHTML = `<li class="info-item"><small>E-mail</small>${
+  CONFIG.email ? `<a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a>` : `<span class="placeholder">[E-mail-cím helye]</span>`
+}</li>`;
+$('#socials').innerHTML = CONFIG.social.map(s =>
+  s.url ? `<a class="social" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`
+        : `<span class="social" title="A hivatkozás még nincs megadva">${esc(s.name)} (hivatkozás helye)</span>`
+).join('');
+
+/* ---------- Forms (nincs hamis sikerüzenet) ---------- */
+function setupForm(form, statusEl, buildSummary, title){
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    statusEl.className = 'status';
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const summary = buildSummary(new FormData(form));
+
+    if (CONFIG.formEndpoint) {
+      try {
+        const res = await fetch(CONFIG.formEndpoint, { method:'POST', body:new FormData(form), headers:{Accept:'application/json'} });
+        if (!res.ok) throw new Error(res.status);
+        statusEl.className = 'status show ok';
+        statusEl.innerHTML = '<strong>Elküldve.</strong>Köszönjük! Hamarosan jelentkezünk.';
+        form.reset();
+      } catch (err) {
+        statusEl.className = 'status show err';
+        statusEl.innerHTML = '<strong>Az üzenetet nem sikerült elküldeni.</strong>Ellenőrizd a kapcsolatot, majd próbáld újra.';
+      }
+      return;
+    }
+    statusEl.className = 'status show warn';
+    statusEl.innerHTML = `<strong>Az üzenet nem lett elküldve.</strong>Ezen az oldalon még nincs beállítva az üzenetfogadó háttérrendszer, ezért az adataid sehova nem kerültek továbbításra. Az alábbi szöveget kimásolhatod, és később elküldheted nekünk, amint megadjuk az elérhetőségeinket.
+      <textarea readonly aria-label="${esc(title)} szövege">${esc(summary)}</textarea>
+      <button class="btn btn-ghost btn-sm" type="button" data-copy>Szöveg másolása</button>`;
+    statusEl.focus?.();
+  });
+  statusEl.addEventListener('click', async e => {
+    const b = e.target.closest('[data-copy]'); if(!b) return;
+    const ta = $('textarea', statusEl);
+    try { await navigator.clipboard.writeText(ta.value); b.textContent = 'Kimásolva'; }
+    catch { ta.focus(); ta.select(); b.textContent = 'Jelöld ki és másold ki kézzel'; }
+  });
+}
+setupForm($('#quoteForm'), $('#quoteStatus'), fd => [
+  'PrizmaCRAFT – ajánlatkérés',
+  `Név: ${fd.get('nev')}`,
+  `E-mail: ${fd.get('email')}`,
+  `Termék típusa: ${fd.get('termek')}`,
+  `Mennyiség: ${fd.get('mennyiseg')}`,
+  `Elképzelés: ${fd.get('leiras')}`,
+  `Referenciafájl: ${(fd.get('fajl') && fd.get('fajl').name) ? fd.get('fajl').name : '–'}`
+].join('\n'), 'Ajánlatkérés');
+setupForm($('#contactForm'), $('#contactStatus'), fd => [
+  'PrizmaCRAFT – üzenet',
+  `Név: ${fd.get('nev')}`,
+  `E-mail: ${fd.get('email')}`,
+  `Üzenet: ${fd.get('uzenet')}`
+].join('\n'), 'Üzenet');
+
+/* ---------- Mobile menu ---------- */
+const menuBtn = $('#menuBtn'), nav = $('#nav');
+function closeMenu(){ nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); menuBtn.setAttribute('aria-label','Menü megnyitása'); }
+menuBtn.addEventListener('click', () => {
+  const open = nav.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', String(open));
+  menuBtn.setAttribute('aria-label', open ? 'Menü bezárása' : 'Menü megnyitása');
+});
+nav.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+/* ---------- Active nav + reveal ---------- */
+const navLinks = $$('.nav a[href^="#"]:not(.btn)');
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) navLinks.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + en.target.id)));
+  });
+}, { rootMargin:'-45% 0px -50% 0px' });
+['fooldal','termekek','technologiak','rolunk','kapcsolat'].forEach(id => { const el = document.getElementById(id); if (el) spy.observe(el); });
+
+let revealObs;
+function observeReveals(){
+  const items = $$('.reveal:not(.in)');
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { items.forEach(i => i.classList.add('in')); return; }
+  revealObs = revealObs || new IntersectionObserver((entries, o) => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); o.unobserve(en.target); } }), { threshold:.12 });
+  items.forEach(i => revealObs.observe(i));
+}
+
+renderProducts();
+</script>
+</body>
+</html>
