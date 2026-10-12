@@ -117,8 +117,8 @@ a{color:inherit}
   animation:bob 6s ease-in-out infinite;
 }
 .chip-float i{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
-.chip-float.c1{left:2%;bottom:6%}
-.chip-float.c2{right:2%;top:2%;animation-delay:-3s}
+.chip-float.c1{left:2%;top:4%}
+.chip-float.c2{right:2%;bottom:1%;animation-delay:-3s}
 .chip-float.c2 i{background:var(--violet-soft);box-shadow:0 0 12px var(--violet-soft)}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .layer{opacity:0;animation:build 11s ease-in-out infinite both;animation-delay:calc(var(--i) * .5s);transform-box:fill-box;transform-origin:center}
@@ -335,6 +335,21 @@ span.social{border-style:dashed;color:var(--muted)}
   .layer{opacity:1}
   .js .reveal{opacity:1;transform:none}
 }
+
+/* ---------- Depth: living background, tilt, layered cards ---------- */
+body{position:relative}
+.bgfx{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;animation:orb 18s ease-in-out infinite alternate}
+@keyframes orb{to{transform:translate(50px,-36px) scale(1.15)}}
+.bg-item{position:absolute;will-change:transform;transition:transform .45s ease-out}
+.bg-item svg{display:block;width:100%;height:auto;rotate:var(--r,0deg);filter:blur(var(--blur,0px));animation:drift var(--dur,14s) ease-in-out infinite;animation-delay:var(--del,0s)}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+.hero-art{perspective:1000px}
+.hero-art > svg{transform:rotateY(calc(var(--mx,0) * 7deg)) rotateX(calc(var(--my,0) * -5deg));transition:transform .3s ease-out}
+.chip-float{translate:calc(var(--mx,0) * 18px) calc(var(--my,0) * 14px)}
+.card,.benefit,.panel,.member,.form-card,.value{box-shadow:0 30px 60px -34px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06)}
+@media (max-width:639px){.bg-item.hide-m{display:none}}
+@media (prefers-reduced-motion:reduce){.bg-item,.hero-art > svg{transition:none}}
 </style>
 </head>
 <body>
@@ -387,15 +402,20 @@ span.social{border-style:dashed;color:var(--muted)}
     </div>
 
     <div class="hero-art">
-      <svg viewBox="0 0 640 520" role="img" aria-label="Illusztráció: egy 3D nyomtató rétegenként épít fel egy vázát, egy prizma a fénysugarat színekre bontja, mellette egy lézergravírozott tábla látszik.">
+      <svg viewBox="0 0 640 520" role="img" aria-label="Illusztráció: egy 3D nyomtató rétegenként épít fel egy vázát, egy prizma a fénysugarat színekre bontja, mellette egy lézervágó és gravírozó gép dolgozik egy rétegelt lemezen.">
         <defs>
           <linearGradient id="hLayer" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff5a1f"/><stop offset="1" stop-color="#ffb36b"/></linearGradient>
-          <linearGradient id="hBeam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".95"/></linearGradient>
+          <linearGradient id="hCyl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9a3412"/><stop offset=".28" stop-color="#ff9a55"/><stop offset=".6" stop-color="#ff5a1f"/><stop offset="1" stop-color="#7c2d12"/></linearGradient>
+          <radialGradient id="hFloor" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff7a3d" stop-opacity=".34"/><stop offset=".6" stop-color="#ff5a1f" stop-opacity=".1"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient>
+          <linearGradient id="hBeam" gradientUnits="userSpaceOnUse" x1="0" y1="150" x2="486" y2="150"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".95"/></linearGradient>
           <linearGradient id="hPrism" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a3d" stop-opacity=".55"/><stop offset="1" stop-color="#ffb36b" stop-opacity=".25"/></linearGradient>
           <linearGradient id="hFrame" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3d404a"/><stop offset="1" stop-color="#23252c"/></linearGradient>
           <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
 
+        <!-- floor + contact shadow for depth -->
+        <ellipse cx="330" cy="448" rx="318" ry="32" fill="url(#hFloor)"/>
+        <ellipse cx="265" cy="446" rx="176" ry="9" fill="#000" opacity=".55"/>
         <!-- light beam + spectrum (behind everything) -->
         <line x1="0" y1="150" x2="486" y2="150" stroke="url(#hBeam)" stroke-width="3" filter="url(#glow)"/>
         <g stroke-width="3" stroke-linecap="round" fill="none" filter="url(#glow)">
@@ -407,6 +427,7 @@ span.social{border-style:dashed;color:var(--muted)}
         </g>
         <!-- prism -->
         <path d="M520 86 592 214H448z" fill="url(#hPrism)" stroke="#ffc9a8" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M520 86 592 214H520z" fill="#fff" fill-opacity=".09"/>
         <path d="M520 86v128M484 150h72" stroke="#fff" stroke-opacity=".25" stroke-width="1.2"/>
 
         <!-- printer frame -->
@@ -414,6 +435,7 @@ span.social{border-style:dashed;color:var(--muted)}
         <rect x="112" y="78" width="14" height="344" rx="5" fill="url(#hFrame)" stroke="#4d505b"/>
         <rect x="404" y="78" width="14" height="344" rx="5" fill="url(#hFrame)" stroke="#4d505b"/>
         <rect x="104" y="64" width="322" height="20" rx="8" fill="url(#hFrame)" stroke="#4d505b"/>
+        <path d="M118 86v332M410 86v332" stroke="#fff" stroke-opacity=".14" stroke-width="2"/>
         <rect x="112" y="214" width="306" height="12" rx="5" fill="#2c2e36" stroke="#4d505b"/>
 
         <!-- printed vase -->
@@ -426,15 +448,11 @@ span.social{border-style:dashed;color:var(--muted)}
           <circle cx="260" cy="268" r="3" fill="#ffb36b" filter="url(#glow)"/>
         </g>
 
-        <!-- laser engraving plaque -->
-        <rect x="462" y="348" width="150" height="92" rx="12" fill="#26282f" stroke="#4d505b"/>
-        <g fill="none" stroke="#ffb36b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)">
-          <path d="M537 366 566 414H508z"/><path d="M537 366v48M522 392h30" opacity=".6"/>
-        </g>
-        <path d="M480 428h114" stroke="#ff5a1f" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+        <!-- laser cutter / engraver -->
+        <g id="heroLaser" transform="translate(426 316) scale(.46)"></g>
       </svg>
       <div class="chip-float c1"><i></i>3D nyomtatás</div>
-      <div class="chip-float c2"><i></i>Lézergravírozás</div>
+      <div class="chip-float c2"><i></i>Lézervágás és gravírozás</div>
     </div>
   </div>
 </section>
@@ -713,7 +731,7 @@ $('#year').textContent = new Date().getFullYear();
     const t = i / (N - 1);
     const w = 52 + 44 * Math.sin(Math.PI * Math.min(1, t * 0.95 + 0.04)) - 14 * t * t;
     const y = 410 - i * 11;
-    out += `<rect class="layer" style="--i:${i}" x="${(260 - w / 2).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="10" rx="4.5" fill="url(#hLayer)" opacity="${(0.6 + 0.4 * (1 - t)).toFixed(2)}"/>`;
+    out += `<rect class="layer" style="--i:${i}" x="${(260 - w / 2).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="10" rx="4.5" fill="url(#hCyl)" opacity="${(0.6 + 0.4 * (1 - t)).toFixed(2)}"/>`;
   }
   g.innerHTML = out;
 })();
@@ -741,59 +759,75 @@ $('#year').textContent = new Date().getFullYear();
     <path d="M330 52h30l-8 18h-14z" fill="#ffc9a8"/><rect x="318" y="30" width="54" height="24" rx="6" fill="#2c2e36" stroke="#ff7a3d"/>
   </svg>`;
 
-  // Laser: desktop CO2-style laser cutter with the lid open
-  $('#techLaserArt').innerHTML = `
-  <svg viewBox="0 0 480 290" role="img" aria-label="Illusztráció: nyitott fedelű asztali lézervágó gép. A portálon mozgó lézerfej a méhsejt rácsos munkaasztalon fekvő rétegelt lemezt vágja és gravírozza, elöl a vezérlőpanel látszik.">
+  // Laser cutter / engraver (desktop CO2 style, lid open) – shared by hero and technology panel
+  function laserMachine(p){ return `
     <defs>
-      <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c79a68"/><stop offset="1" stop-color="#9a6b40"/></linearGradient>
-      <pattern id="honey" width="12" height="10.4" patternUnits="userSpaceOnUse"><path d="M3 0h6l3 5.2-3 5.2H3L0 5.2z" fill="none" stroke="#4d505b" stroke-width="1"/></pattern>
-      <filter id="glow2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <linearGradient id="${p}wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d1a672"/><stop offset="1" stop-color="#9a6b40"/></linearGradient>
+      <linearGradient id="${p}body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#32353f"/><stop offset="1" stop-color="#191b21"/></linearGradient>
+      <linearGradient id="${p}metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#666a78"/><stop offset=".5" stop-color="#40434d"/><stop offset="1" stop-color="#262830"/></linearGradient>
+      <linearGradient id="${p}lid" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a3d" stop-opacity=".34"/><stop offset="1" stop-color="#ff5a1f" stop-opacity=".07"/></linearGradient>
+      <radialGradient id="${p}spot"><stop offset="0" stop-color="#ffd2a8" stop-opacity=".95"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient>
+      <pattern id="${p}honey" width="12" height="10.4" patternUnits="userSpaceOnUse"><path d="M3 0h6l3 5.2-3 5.2H3L0 5.2z" fill="none" stroke="#5a5d69" stroke-width="1"/></pattern>
+      <filter id="${p}glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     </defs>
 
+    <ellipse cx="244" cy="278" rx="222" ry="13" fill="#000" opacity=".5"/>
+
     <!-- exhaust duct -->
-    <rect x="416" y="104" width="40" height="36" rx="7" fill="#2c2e36" stroke="#4d505b" stroke-width="2"/>
+    <rect x="416" y="104" width="40" height="36" rx="7" fill="url(#${p}metal)" stroke="#4d505b" stroke-width="2"/>
     <circle cx="436" cy="122" r="11" fill="#131418" stroke="#4d505b"/><path d="M436 111v22M425 122h22" stroke="#4d505b" stroke-width="2"/>
 
     <!-- open lid with tinted window -->
-    <path d="M92 12h296l22 76H70z" fill="rgba(255,90,31,.14)" stroke="#ff7a3d" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M92 12h296l22 76H70z" fill="url(#${p}lid)" stroke="#ff7a3d" stroke-width="2.5" stroke-linejoin="round"/>
     <path d="M132 22l-14 58M164 22l-14 58" stroke="#ffd2a8" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+    <path d="M70 88H410l1 6H69z" fill="url(#${p}metal)"/>
 
     <!-- machine top and honeycomb bed -->
-    <path d="M70 88H410L432 182H48z" fill="#1b1d23" stroke="#4d505b" stroke-width="2" stroke-linejoin="round"/>
-    <polygon points="88,98 392,98 412,172 68,172" fill="#131418" stroke="#4d505b" stroke-width="2"/>
-    <polygon points="88,98 392,98 412,172 68,172" fill="url(#honey)"/>
-    <path d="M84 98 66 172M396 98 414 172" stroke="#6a6e7a" stroke-width="5" stroke-linecap="round"/>
+    <path d="M70 94H410L432 182H48z" fill="#1b1d23" stroke="#4d505b" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="88,100 392,100 412,172 68,172" fill="#131418" stroke="#4d505b" stroke-width="2"/>
+    <polygon points="88,100 392,100 412,172 68,172" fill="url(#${p}honey)"/>
+    <polygon points="88,100 392,100 389,112 85,112" fill="#000" opacity=".4"/>
+    <path d="M84 100 66 172M396 100 414 172" stroke="#7a7e8b" stroke-width="5" stroke-linecap="round"/>
 
-    <!-- plywood sheet with cut-outs and engraving -->
-    <polygon points="128,112 352,112 366,164 114,164" fill="url(#wood)" stroke="#6b4a2c" stroke-width="1.5"/>
-    <path d="M136 124c40-5 70 4 110-1s60-2 94 0M130 148c50 5 80-4 120 1s70 3 104 0" fill="none" stroke="#6b4a2c" stroke-opacity=".4" stroke-width="1.2" stroke-linecap="round"/>
-    <ellipse cx="170" cy="138" rx="26" ry="12" fill="#131418" stroke="#ffb36b" stroke-width="1.5"/>
-    <rect x="214" y="127" width="40" height="22" rx="7" fill="#131418" stroke="#ffb36b" stroke-width="1.5"/>
-    <g fill="none" stroke="#4a2c16" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M308 122l22 28h-44z"/><path d="M308 122v28M298 140h20" opacity=".7"/>
+    <!-- plywood sheet with thickness, cut-outs and burnt engraving -->
+    <polygon points="122,120 358,120 374,174 106,174" fill="#000" opacity=".38"/>
+    <polygon points="128,114 352,114 366,164 114,164" fill="url(#${p}wood)" stroke="#6b4a2c" stroke-width="1.5"/>
+    <polygon points="114,164 366,164 367,170 113,170" fill="#7a5532"/>
+    <path d="M136 126c40-5 70 4 110-1s60-2 94 0M130 150c50 5 80-4 120 1s70 3 104 0" fill="none" stroke="#6b4a2c" stroke-opacity=".4" stroke-width="1.2" stroke-linecap="round"/>
+    <ellipse cx="170" cy="140" rx="26" ry="12" fill="#131418" stroke="#ffb36b" stroke-width="1.5"/>
+    <path d="M144 143a26 12 0 0 0 52 0" fill="none" stroke="#7a5532" stroke-width="3"/>
+    <rect x="214" y="129" width="40" height="22" rx="7" fill="#131418" stroke="#ffb36b" stroke-width="1.5"/>
+    <g fill="none" stroke="#2e1a0c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M308 124l22 28h-44z"/><path d="M308 124v28M298 142h20" opacity=".7"/><path d="M288 159h40M296 164h24" opacity=".8"/>
     </g>
 
-    <!-- gantry: posts, X-axis beam, moving laser head -->
-    <rect x="66" y="94" width="14" height="48" rx="4" fill="#3d404a" stroke="#6a6e7a" stroke-width="1.5"/>
-    <rect x="398" y="94" width="14" height="48" rx="4" fill="#3d404a" stroke="#6a6e7a" stroke-width="1.5"/>
-    <rect x="70" y="92" width="340" height="12" rx="5" fill="#3d404a" stroke="#6a6e7a" stroke-width="1.5"/>
+    <!-- gantry: posts, X-axis beam (with shadow), moving laser head -->
+    <rect x="72" y="132" width="336" height="8" rx="4" fill="#000" opacity=".25"/>
+    <rect x="66" y="94" width="14" height="48" rx="4" fill="url(#${p}metal)" stroke="#7a7e8b" stroke-width="1.5"/>
+    <rect x="398" y="94" width="14" height="48" rx="4" fill="url(#${p}metal)" stroke="#7a7e8b" stroke-width="1.5"/>
+    <rect x="70" y="92" width="340" height="12" rx="5" fill="url(#${p}metal)" stroke="#7a7e8b" stroke-width="1.5"/>
     <g class="laser-sweep">
-      <rect x="226" y="86" width="48" height="30" rx="7" fill="#2c2e36" stroke="#ff7a3d" stroke-width="2"/>
-      <rect x="236" y="116" width="28" height="10" rx="3" fill="#3d404a"/>
+      <ellipse cx="250" cy="152" rx="24" ry="8" fill="url(#${p}spot)"/>
+      <rect x="226" y="86" width="48" height="30" rx="7" fill="url(#${p}metal)" stroke="#ff7a3d" stroke-width="2"/>
+      <rect x="236" y="116" width="28" height="10" rx="3" fill="#4d505b"/>
       <path d="M246 126h8l-2 9h-4z" fill="#ffd2a8"/>
-      <line x1="250" y1="135" x2="250" y2="150" stroke="#ff5a1f" stroke-width="2.6" filter="url(#glow2)"/>
-      <circle class="laser-dot" cx="250" cy="152" r="4.5" fill="#ffd2a8" filter="url(#glow2)"/>
+      <line x1="250" y1="135" x2="250" y2="150" stroke="#ff5a1f" stroke-width="2.6" filter="url(#${p}glow)"/>
+      <circle class="laser-dot" cx="250" cy="152" r="4.5" fill="#ffd2a8" filter="url(#${p}glow)"/>
     </g>
 
     <!-- front housing with control panel -->
-    <rect x="48" y="182" width="384" height="86" rx="12" fill="#23252c" stroke="#4d505b" stroke-width="2"/>
+    <rect x="48" y="182" width="384" height="86" rx="12" fill="url(#${p}body)" stroke="#4d505b" stroke-width="2"/>
+    <path d="M60 183.5H420" stroke="#fff" stroke-opacity=".22" stroke-width="2" stroke-linecap="round"/>
     <rect x="70" y="198" width="86" height="42" rx="6" fill="#131418" stroke="#4d505b"/>
     <path d="M82 214h42M82 227h60" stroke="#ff7a3d" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="184" cy="219" r="7" fill="#3d404a" stroke="#6a6e7a"/><circle cx="208" cy="219" r="7" fill="#3d404a" stroke="#6a6e7a"/>
+    <circle cx="184" cy="219" r="7" fill="#3d404a" stroke="#7a7e8b"/><circle cx="208" cy="219" r="7" fill="#3d404a" stroke="#7a7e8b"/>
     <circle cx="234" cy="219" r="9" fill="#ff5a1f"/>
     <circle cx="394" cy="219" r="17" fill="#26282f" stroke="#ffb36b" stroke-width="1.5"/><circle cx="394" cy="219" r="11" fill="#e5484d"/>
     <rect x="72" y="268" width="38" height="8" rx="3" fill="#3d404a"/><rect x="370" y="268" width="38" height="8" rx="3" fill="#3d404a"/>
-  </svg>`;
+  `; }
+  $('#techLaserArt').innerHTML = `
+  <svg viewBox="0 0 480 292" role="img" aria-label="Illusztráció: nyitott fedelű asztali lézervágó gép. A portálon mozgó lézerfej a méhsejt rácsos munkaasztalon fekvő rétegelt lemezt vágja és gravírozza, elöl a vezérlőpanel látszik.">${laserMachine('t')}</svg>`;
+  $('#heroLaser').innerHTML = laserMachine('h');
 })();
 
 /* ---------- Products ---------- */
@@ -938,6 +972,60 @@ function observeReveals(){
   revealObs = revealObs || new IntersectionObserver((entries, o) => entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); o.unobserve(en.target); } }), { threshold:.12 });
   items.forEach(i => revealObs.observe(i));
 }
+
+
+/* ---------- Living background: faint floating products with parallax ---------- */
+(function(){
+  const host = document.createElement('div');
+  host.className = 'bgfx'; host.setAttribute('aria-hidden', 'true');
+  const orbs = [
+    [70, 1, 560, 'rgba(255,90,31,.20)'], [-10, 34, 520, 'rgba(255,179,107,.10)'],
+    [72, 62, 560, 'rgba(255,90,31,.13)'], [-8, 88, 480, 'rgba(255,122,61,.10)']
+  ];
+  host.innerHTML = orbs.map(o => `<div class="orb" style="left:${o[0]}%;top:${o[1]}%;width:${o[2]}px;height:${o[2]}px;background:radial-gradient(circle,${o[3]},transparent 65%)"></div>`).join('');
+
+  // [product index, left %, top %, size px, depth, rotate deg, blur px, opacity]
+  const L = [
+    [0, 4, 3, 110, .7, -10, 0, .13], [5, 88, 1.5, 190, 1.2, 12, 3, .10], [7, 46, 1, 80, .4, 0, 0, .10],
+    [3, 68, 8, 92, .5, 8, 0, .12], [10, 20, 9, 150, 1, -14, 2, .10], [9, 92, 11, 100, .6, 14, 0, .12],
+    [1, 36, 12, 70, .4, -6, 0, .10], [8, 58, 11, 120, .8, 6, 1.5, .10],
+    [4, 3, 20, 130, .8, 12, 1.5, .11], [6, 92, 24, 110, .6, -8, 0, .11], [2, 8, 33, 170, 1.1, -10, 3, .09],
+    [11, 90, 38, 130, .8, 9, 1, .11], [0, 4, 46, 90, .5, 0, 0, .11], [7, 94, 51, 160, 1.1, -12, 3, .09],
+    [5, 6, 58, 120, .7, 8, 0, .11], [9, 91, 63, 100, .5, -6, 0, .11], [3, 3, 70, 150, 1, 14, 2, .10],
+    [1, 93, 74, 130, .8, -9, 1, .10], [10, 7, 81, 100, .5, 6, 0, .11], [8, 90, 85, 170, 1.1, 10, 3, .09],
+    [4, 4, 91, 120, .7, -12, 1, .10], [6, 92, 96, 100, .5, 8, 0, .10]
+  ];
+  L.forEach((a, i) => {
+    const p = PRODUCTS[a[0]];
+    const d = document.createElement('div');
+    d.className = 'bg-item' + (i % 2 ? ' hide-m' : '');
+    d.dataset.d = a[4];
+    d.style.cssText = `left:${a[1]}%;top:${a[2]}%;width:${a[3]}px;opacity:${a[7]};--r:${a[5]}deg;--blur:${a[6]}px;--dur:${12 + (i % 5) * 2}s;--del:${-(i % 7) * 1.7}s`;
+    d.innerHTML = `<svg viewBox="0 0 64 64" fill="none" stroke="${i % 2 ? '#f5f1ea' : '#ff7a3d'}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p.glyph}</svg>`;
+    host.appendChild(d);
+  });
+  document.body.prepend(host);
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const items = [...host.querySelectorAll('.bg-item')];
+  const hero = $('.hero');
+  let sy = 0, mx = 0, my = 0, raf = 0;
+  function paint(){
+    raf = 0;
+    items.forEach(el => {
+      const k = +el.dataset.d;
+      el.style.transform = `translate3d(${(mx * k * 26).toFixed(1)}px,${(-sy * 0.07 * k + my * k * 18).toFixed(1)}px,0)`;
+    });
+    hero.style.setProperty('--mx', mx.toFixed(3));
+    hero.style.setProperty('--my', my.toFixed(3));
+  }
+  const queue = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  addEventListener('scroll', () => { sy = scrollY; queue(); }, { passive: true });
+  addEventListener('pointermove', e => {
+    if (e.pointerType === 'touch') return;
+    mx = (e.clientX / innerWidth - .5) * 2; my = (e.clientY / innerHeight - .5) * 2; queue();
+  }, { passive: true });
+})();
 
 renderProducts();
 </script>
