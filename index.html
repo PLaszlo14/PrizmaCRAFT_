@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark">
 <title>PrizmaCRAFT – egyedi ajándékok 3D nyomtatással, lézervágással és gravírozással</title>
 <meta name="description" content="A PrizmaCRAFT egyedi ajándék- és használati tárgyakat tervez és készít 3D nyomtatással, lézervágással és gravírozással. A te ötleted. A mi alkotásunk.">
-<link rel="icon" type="image/jpg" href="favicon_.ico">
+<link rel="icon" type="image/jpg" href="favicon.ico">
 <meta name="theme-color" content="#131418">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -350,9 +350,35 @@ body{position:relative}
 .card,.benefit,.panel,.member,.form-card,.value{box-shadow:0 30px 60px -34px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.06)}
 @media (max-width:639px){.bg-item.hide-m{display:none}}
 @media (prefers-reduced-motion:reduce){.bg-item,.hero-art > svg{transition:none}}
+
+/* ---------- Back to top + random team accent ---------- */
+.back-to-top{
+  position:fixed;right:22px;bottom:22px;z-index:80;
+  display:flex;align-items:center;gap:9px;
+  padding:13px 17px;border:1px solid rgba(255,122,61,.45);
+  border-radius:999px;background:rgba(27,29,35,.92);color:var(--text);
+  box-shadow:0 12px 35px rgba(0,0,0,.35);backdrop-filter:blur(12px);
+  font:600 .95rem var(--font-body);cursor:pointer;
+  opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:opacity .2s,visibility .2s,transform .2s,border-color .2s;
+}
+.back-to-top.visible{opacity:1;visibility:visible;transform:none}
+.back-to-top:hover{border-color:var(--cyan);transform:translateY(-3px)}
+.back-to-top svg{width:18px;height:18px;flex:none}
+.member.random-highlight{
+  border-color:rgba(255,179,107,.75);
+  box-shadow:0 0 0 1px rgba(255,179,107,.18),0 24px 55px -30px rgba(255,90,31,.8);
+}
+.member.random-highlight .avatar{box-shadow:0 0 28px rgba(255,122,61,.35)}
+@media(max-width:520px){.back-to-top{right:14px;bottom:14px;padding:12px 14px}.back-to-top .top-label{display:none}}
+
 </style>
 </head>
 <body>
+<button class="back-to-top" id="backToTop" type="button" aria-label="Ugrás az oldal tetejére" title="Ugrás a tetejére">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <span class="top-label">Ugrás a tetejére</span>
+</button>
 <a class="skip" href="#tartalom">Ugrás a tartalomra</a>
 
 <!-- Shared SVG gradients -->
@@ -711,9 +737,9 @@ const PRODUCTS = [
 ];
 
 const TEAM = [
-  { name:"Póti László",    role:"[Szerepkör helye]", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" },
-  { name:"Székely Milán",  role:"[Szerepkör helye]", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" },
-  { name:"Antal András",   role:"[Szerepkör helye]", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" }
+  { name:"Póti László",    role:"Alapító és 3D-tervező", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" },
+  { name:"Székely Milán",  role:"Technológiai vezető", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" },
+  { name:"Antal András",   role:"Kreatív tervező", bio:"[Rövid bemutatkozás helye. Később egyszerűen módosítható.]" }
 ];
 
 /* ========================================================= */
@@ -1027,7 +1053,35 @@ function observeReveals(){
   }, { passive: true });
 })();
 
+
+/* ---------- Ugrás a tetejére ---------- */
+const backToTop = $('#backToTop');
+function updateBackToTop(){
+  backToTop.classList.toggle('visible', window.scrollY > 420);
+}
+window.addEventListener('scroll', updateBackToTop, { passive:true });
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top:0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+});
+updateBackToTop();
+
+/* ---------- Véletlenszerű csapattag kiemelése ---------- */
+function highlightRandomTeamMember(){
+  const members = $$('#teamGrid .member');
+  if(!members.length) return;
+  members.forEach(member => {
+    member.classList.remove('random-highlight');
+    member.removeAttribute('data-random-pick');
+  });
+  const picked = members[Math.floor(Math.random() * members.length)];
+  picked.classList.add('random-highlight');
+  picked.setAttribute('data-random-pick', 'true');
+  picked.setAttribute('aria-label', (picked.querySelector('h3')?.textContent || 'Csapattag') + ' – véletlenszerűen kiemelve');
+}
+
 renderProducts();
+highlightRandomTeamMember();
+
 </script>
 </body>
 </html>
