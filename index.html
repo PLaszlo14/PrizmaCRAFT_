@@ -603,17 +603,17 @@ body{position:relative}
 <p class="copy">© <span id="year">2026</span> PrizmaCRAFT. Minden jog fenntartva.</p>
 </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 /* =========================================================
 KONFIGURÁCIÓ – itt egyszerűen módosíthatók az adatok
 ========================================================= */
 const CONFIG = {
-// Ha van űrlapfogadó háttérrendszer (pl. saját szerver vagy űrlapszolgáltatás),
-// ide írd az URL-jét. Üresen hagyva az űrlap NEM küld el semmit, és ezt jelzi is.
-formEndpoint: "",
-// Web3Forms hozzáférési kulcs: az ajánlatkérő űrlap ezzel küld levelet az e-mail-címre.
-// Kulcs kérése: https://web3forms.com (az antal.41234@gmail.com címmel)
-web3formsKey: "IDE_JÖN_A_KULCS",
+// EmailJS-adatok: ezeket az EmailJS Dashboardban találod.
+// Public Key: Account > General; Service ID: Email Services; Template ID: Email Templates.
+emailjsPublicKey: "Bh6mrccSqG_oEkml",
+emailjsServiceId: "service_fc4w9iy",
+emailjsTemplateId: "template_9fwlhfs",
 // Kapcsolati adatok. Üres érték = helyőrző jelenik meg.
 email: "antal.41234@gmail.com",
 social: [
@@ -842,69 +842,52 @@ $('#socials').innerHTML = CONFIG.social.map(s =>
 s.url ? `<a class="social" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`
 : `<span class="social" title="A hivatkozás még nincs megadva">${esc(s.name)} (hivatkozás helye)</span>`
 ).join('');
-/* ---------- Forms (nincs hamis sikerüzenet) ---------- */
-function setupForm(form, statusEl, buildSummary, title, sendMail){
+/* ---------- Forms: EmailJS ---------- */
+function setupForm(form, statusEl, buildSummary, title, formType){
 form.addEventListener('submit', async e => {
 e.preventDefault();
 statusEl.className = 'status';
 if (!form.checkValidity()) { form.reportValidity(); return; }
-const summary = buildSummary(new FormData(form));
-/* Ajánlatkérés: levélküldés a Web3Forms szolgáltatáson keresztül */
-if (sendMail && CONFIG.web3formsKey && CONFIG.web3formsKey !== "IDE_JÖN_A_KULCS") {
+if (!CONFIG.emailjsPublicKey || CONFIG.emailjsPublicKey === 'IDE_JÖN_A_PUBLIC_KEY' ||
+    !CONFIG.emailjsServiceId || CONFIG.emailjsServiceId === 'IDE_JÖN_A_SERVICE_ID' ||
+    !CONFIG.emailjsTemplateId || CONFIG.emailjsTemplateId === 'IDE_JÖN_A_TEMPLATE_ID') {
+statusEl.className = 'status show warn';
+statusEl.textContent = 'Az e-mailküldés még nincs beállítva. Add meg az EmailJS Public Key, Service ID és Template ID értékeit a CONFIG részben.';
+return;
+}
+const fd = new FormData(form);
+const summary = buildSummary(fd);
 const btn = form.querySelector('button[type=submit]');
 btn.disabled = true;
 try {
-const fd = new FormData(form);
-const res = await fetch('https://api.web3forms.com/submit', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-body: JSON.stringify({
-access_key: CONFIG.web3formsKey,
-subject: 'PrizmaCRAFT – új ajánlatkérés: ' + fd.get('nev'),
+const templateParams = {
+subject: formType === 'Ajánlatkérés' ? 'PrizmaCRAFT – új ajánlatkérés: ' + (fd.get('nev') || '') : 'PrizmaCRAFT – új kapcsolatfelvételi üzenet: ' + (fd.get('nev') || ''),
 from_name: 'PrizmaCRAFT weboldal',
-name: fd.get('nev'),
-email: fd.get('email'),
-replyto: fd.get('email'),
-message: summary
-})
+name: fd.get('nev') || '',
+email: fd.get('email') || '',
+reply_to: fd.get('email') || '',
+form_type: formType,
+message: summary,
+termek: fd.get('termek') || '',
+mennyiseg: fd.get('mennyiseg') || '',
+leiras: fd.get('leiras') || '',
+fajl_nev: fd.get('fajl') && fd.get('fajl').name ? fd.get('fajl').name : '',
+uzenet: fd.get('uzenet') || ''
+};
+const result = await emailjs.send(CONFIG.emailjsServiceId, CONFIG.emailjsTemplateId, templateParams, {
+publicKey: CONFIG.emailjsPublicKey
 });
-const data = await res.json();
-if (!res.ok || !data.success) throw new Error(data.message || res.status);
+if (result.status < 200 || result.status >= 300) throw new Error('EmailJS küldési hiba');
 statusEl.className = 'status show ok';
-statusEl.innerHTML = '<strong>Elküldve.</strong>Köszönjük! Hamarosan jelentkezünk.';
+statusEl.textContent = 'Elküldve. Köszönjük! Hamarosan jelentkezünk.';
 form.reset();
 } catch (err) {
+console.error('EmailJS hiba:', err);
 statusEl.className = 'status show err';
-statusEl.innerHTML = '<strong>Az üzenetet nem sikerült elküldeni.</strong>Ellenőrizd a kapcsolatot, majd próbáld újra.';
+statusEl.textContent = 'Az üzenetet nem sikerült elküldeni. Ellenőrizd az EmailJS beállításait és próbáld újra.';
 } finally {
 btn.disabled = false;
 }
-return;
-}
-if (CONFIG.formEndpoint) {
-try {
-const res = await fetch(CONFIG.formEndpoint, { method:'POST', body:new FormData(form), headers:{Accept:'application/json'} });
-if (!res.ok) throw new Error(res.status);
-statusEl.className = 'status show ok';
-statusEl.innerHTML = '<strong>Elküldve.</strong>Köszönjük! Hamarosan jelentkezünk.';
-form.reset();
-} catch (err) {
-statusEl.className = 'status show err';
-statusEl.innerHTML = '<strong>Az üzenetet nem sikerült elküldeni.</strong>Ellenőrizd a kapcsolatot, majd próbáld újra.';
-}
-return;
-}
-statusEl.className = 'status show warn';
-statusEl.innerHTML = `<strong>Az üzenet nem lett elküldve.</strong>Ezen az oldalon még nincs beállítva az üzenetfogadó háttérrendszer, ezért az adataid sehova nem kerültek továbbításra. Az alábbi szöveget kimásolhatod, és később elküldheted nekünk, amint megadjuk az elérhetőségeinket.
-<textarea readonly aria-label="${esc(title)} szövege">${esc(summary)}</textarea>
-<button class="btn btn-ghost btn-sm" type="button" data-copy>Szöveg másolása</button>`;
-statusEl.focus?.();
-});
-statusEl.addEventListener('click', async e => {
-const b = e.target.closest('[data-copy]'); if(!b) return;
-const ta = $('textarea', statusEl);
-try { await navigator.clipboard.writeText(ta.value); b.textContent = 'Kimásolva'; }
-catch { ta.focus(); ta.select(); b.textContent = 'Jelöld ki és másold ki kézzel'; }
 });
 }
 setupForm($('#quoteForm'), $('#quoteStatus'), fd => [
@@ -914,14 +897,14 @@ setupForm($('#quoteForm'), $('#quoteStatus'), fd => [
 `Termék típusa: ${fd.get('termek')}`,
 `Mennyiség: ${fd.get('mennyiseg')}`,
 `Elképzelés: ${fd.get('leiras')}`,
-`Referenciafájl: ${(fd.get('fajl') && fd.get('fajl').name) ? fd.get('fajl').name : '–'}`
-].join('\n'), 'Ajánlatkérés', true);
+`Referenciafájl neve: ${(fd.get('fajl') && fd.get('fajl').name) ? fd.get('fajl').name : '–'}`
+].join('\n'), 'Ajánlatkérés', 'Ajánlatkérés');
 setupForm($('#contactForm'), $('#contactStatus'), fd => [
 'PrizmaCRAFT – üzenet',
 `Név: ${fd.get('nev')}`,
 `E-mail: ${fd.get('email')}`,
 `Üzenet: ${fd.get('uzenet')}`
-].join('\n'), 'Üzenet');
+].join('\n'), 'Üzenet', 'Kapcsolatfelvétel');
 /* ---------- Mobile menu ---------- */
 const menuBtn = $('#menuBtn'), nav = $('#nav');
 function closeMenu(){ nav.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); menuBtn.setAttribute('aria-label','Menü megnyitása'); }
