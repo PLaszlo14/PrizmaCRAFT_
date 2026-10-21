@@ -882,9 +882,11 @@ statusEl.className = 'status show ok';
 statusEl.textContent = 'Elküldve. Köszönjük! Hamarosan jelentkezünk.';
 form.reset();
 } catch (err) {
-console.error('EmailJS hiba:', err);
-statusEl.className = 'status show err';
-statusEl.textContent = 'Az üzenetet nem sikerült elküldeni. Ellenőrizd az EmailJS beállításait és próbáld újra.';
+  console.error('EmailJS hiba:', err);
+  statusEl.className = 'status show err';
+  statusEl.textContent =
+    'EmailJS hiba: ' +
+    (err.text || err.message || 'Ismeretlen hiba. Nézd meg a böngésző konzolját.');
 } finally {
 btn.disabled = false;
 }
